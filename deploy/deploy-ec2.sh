@@ -37,8 +37,8 @@ ExecStart=/usr/bin/java -jar /opt/farmacia-app/farmacia.jar
 Restart=always
 Environment=SERVER_PORT=8060
 Environment=DB_URL=jdbc:mysql://localhost:3306/farmacia_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-Environment=DB_USERNAME=root
-Environment=DB_PASSWORD=tu_password
+Environment=DB_USERNAME=farmacia_user
+Environment=DB_PASSWORD=pwx1008184
 Environment=JWT_SECRET=MiClaveJWTMuySeguraParaFarmacia2026Backend
 Environment=ALLOWED_ORIGINS=http://localhost,http://127.0.0.1,http://TU_PUBLIC_DNS
 

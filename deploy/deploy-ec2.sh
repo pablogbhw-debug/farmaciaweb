@@ -40,7 +40,7 @@ Environment=DB_URL=jdbc:mysql://localhost:3306/farmacia_db?allowPublicKeyRetriev
 Environment=DB_USERNAME=farmacia_user
 Environment=DB_PASSWORD=pwx1008184
 Environment=JWT_SECRET=MiClaveJWTMuySeguraParaFarmacia2026Backend
-Environment=ALLOWED_ORIGINS=http://localhost,http://127.0.0.1,http://TU_PUBLIC_DNS
+Environment=ALLOWED_ORIGINS=http://localhost,http://127.0.0.1,http://ec2-3-147-71-131.us-east-2.compute.amazonaws.com
 
 [Install]
 WantedBy=multi-user.target
@@ -96,5 +96,5 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 echo "Despliegue listo"
-echo "Frontend: http://TU_PUBLIC_DNS"
-echo "Backend: http://TU_PUBLIC_DNS/api/..."
+echo "Frontend: ec2-3-147-71-131.us-east-2.compute.amazonaws.com"
+echo "Backend: http://ec2-3-147-71-131.us-east-2.compute.amazonaws.com/api/..."

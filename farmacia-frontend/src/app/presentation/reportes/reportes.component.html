@@ -1,0 +1,166 @@
+<section class="module-grid">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Modulo</p>
+        <h3>Reportes</h3>
+      </div>
+      <p class="muted-text">Consulta reportes generales y productos proximos a vencer.</p>
+    </div>
+
+    <div class="button-row">
+      <button type="button" [class.active-filter]="tipoReporte === 'ventas'" (click)="cargarReporteVentas()">Reporte de ventas</button>
+      <button type="button" class="secondary-button" [class.active-filter]="tipoReporte === 'inventario'" (click)="cargarReporteInventario()">Reporte de inventario</button>
+      <button type="button" class="secondary-button" [class.active-filter]="tipoReporte === 'vencimientos'" (click)="cargarReporteVencimientos()">Productos proximos a vencer</button>
+    </div>
+
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card" *ngIf="tipoReporte === 'ventas' && ventasReporte">
+    <div class="module-header report-header">
+      <div>
+        <p class="section-label">Reporte</p>
+        <h3>Reporte de ventas</h3>
+      </div>
+      <p class="muted-text">Informacion de ventas presentada en formato de tabla.</p>
+    </div>
+
+    <div class="report-summary-grid">
+      <div class="summary-pill">
+        <span>Cantidad de ventas</span>
+        <strong>{{ ventasReporte.cantidadVentas }}</strong>
+      </div>
+      <div class="summary-pill">
+        <span>Total vendido</span>
+        <strong>{{ totalVendido | currency:'PEN':'symbol':'1.2-2' }}</strong>
+      </div>
+      <div class="summary-pill">
+        <span>Ultimos registros</span>
+        <strong>{{ ventas.length }}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Metodo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventas">
+            <td>{{ venta.idVenta }}</td>
+            <td>{{ venta.usuario?.nombre }}</td>
+            <td>{{ venta.fecha | date:'short' }}</td>
+            <td>{{ venta.metodoPago }}</td>
+            <td>S/ {{ venta.total }}</td>
+          </tr>
+          <tr *ngIf="ventas.length === 0">
+            <td colspan="5" class="empty-state">No hay ventas disponibles en este reporte.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card" *ngIf="tipoReporte === 'inventario' && inventarioReporte">
+    <div class="module-header report-header">
+      <div>
+        <p class="section-label">Reporte</p>
+        <h3>Reporte de inventario</h3>
+      </div>
+      <p class="muted-text">Estado actual del stock y minimos configurados.</p>
+    </div>
+
+    <div class="report-summary-grid">
+      <div class="summary-pill">
+        <span>Registros</span>
+        <strong>{{ inventarioReporte.cantidadRegistros }}</strong>
+      </div>
+      <div class="summary-pill">
+        <span>Con alerta</span>
+        <strong>{{ inventarioConAlerta }}</strong>
+      </div>
+      <div class="summary-pill">
+        <span>Productos listados</span>
+        <strong>{{ inventario.length }}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Stock minimo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of inventario">
+            <td>{{ item.idInventario }}</td>
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.stock }}</td>
+            <td>{{ item.stockMinimo }}</td>
+          </tr>
+          <tr *ngIf="inventario.length === 0">
+            <td colspan="4" class="empty-state">No hay datos de inventario para mostrar.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card" *ngIf="tipoReporte === 'vencimientos' && vencimientosReporte">
+    <div class="module-header report-header">
+      <div>
+        <p class="section-label">Reporte</p>
+        <h3>Productos proximos a vencer</h3>
+      </div>
+      <p class="muted-text">Fecha limite considerada: {{ vencimientosReporte.fechaLimite || 'No disponible' }}</p>
+    </div>
+
+    <div class="report-summary-grid">
+      <div class="summary-pill">
+        <span>Fecha limite</span>
+        <strong>{{ vencimientosReporte.fechaLimite || 'Sin dato' }}</strong>
+      </div>
+      <div class="summary-pill">
+        <span>Productos detectados</span>
+        <strong>{{ productosVencimiento.length }}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Categoria</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Fecha de vencimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let producto of productosVencimiento">
+            <td>{{ producto.idProducto }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>S/ {{ producto.precio }}</td>
+            <td>{{ producto.fechaVencimiento }}</td>
+          </tr>
+          <tr *ngIf="productosVencimiento.length === 0">
+            <td colspan="5" class="empty-state">No hay productos proximos a vencer.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

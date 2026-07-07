@@ -1,0 +1,104 @@
+<section class="module-grid">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Modulo</p>
+        <h3>Inventario</h3>
+      </div>
+      <p class="muted-text">Controla stock, stock minimo y alertas de productos.</p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="form-grid">
+      <div class="form-field">
+        <label for="idProducto">Producto</label>
+        <select id="idProducto" formControlName="idProducto">
+          <option [ngValue]="null">Seleccione</option>
+          <option *ngFor="let producto of productos" [ngValue]="producto.idProducto">{{ producto.nombre }}</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('idProducto')">El producto es obligatorio.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="stock">Stock</label>
+        <input id="stock" type="number" formControlName="stock" placeholder="50" />
+        <small class="error-text" *ngIf="campoInvalido('stock')">El stock es obligatorio y no puede ser negativo.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="stockMinimo">Stock minimo</label>
+        <input id="stockMinimo" type="number" formControlName="stockMinimo" placeholder="10" />
+        <small class="error-text" *ngIf="campoInvalido('stockMinimo')">El stock minimo es obligatorio y no puede ser negativo.</small>
+      </div>
+
+      <div class="button-row full-width">
+        <button type="submit" [disabled]="formulario.invalid">{{ inventarioEditandoId ? 'Actualizar' : 'Guardar' }}</button>
+        <button type="button" class="secondary-button" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="secondary-button" (click)="listar()">Listar</button>
+        <button type="button" class="secondary-button" (click)="verAlertas()">Ver alertas</button>
+      </div>
+    </form>
+
+    <p class="success-text" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Listado de inventario</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID inventario</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Stock minimo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of inventario">
+            <td>{{ item.idInventario }}</td>
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.stock }}</td>
+            <td>{{ item.stockMinimo }}</td>
+            <td class="action-row">
+              <button type="button" class="secondary-button" (click)="editar(item)">Editar</button>
+            </td>
+          </tr>
+          <tr *ngIf="inventario.length === 0">
+            <td colspan="5" class="empty-state">No hay registros de inventario.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card">
+    <h3>Alertas de stock o vencimiento</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID inventario</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Stock minimo</th>
+            <th>Fecha de vencimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alerta of alertas">
+            <td>{{ alerta.idInventario }}</td>
+            <td>{{ alerta.producto.nombre }}</td>
+            <td>{{ alerta.stock }}</td>
+            <td>{{ alerta.stockMinimo }}</td>
+            <td>{{ alerta.producto.fechaVencimiento }}</td>
+          </tr>
+          <tr *ngIf="alertas.length === 0">
+            <td colspan="5" class="empty-state">Presiona "Ver alertas" para consultar datos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

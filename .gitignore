@@ -1,0 +1,25 @@
+# Backend Java / Spring Boot
+farmacia-backend/target/
+*.class
+*.log
+
+# Frontend Angular / Node
+farmacia-frontend/node_modules/
+farmacia-frontend/dist/
+farmacia-frontend/.angular/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Carpeta vieja duplicada
+farmacia/
+
+# Variables sensibles
+.env
+*.env

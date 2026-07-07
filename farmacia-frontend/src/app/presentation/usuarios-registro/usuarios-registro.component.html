@@ -1,0 +1,97 @@
+<section class="module-grid usuarios-layout">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Administracion</p>
+        <h3>{{ usuarioEditandoId ? 'Editar usuario' : 'Registro de usuarios' }}</h3>
+        <p class="muted-text">Gestiona cuentas internas con rol de empleado o administrador.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="form-grid">
+      <div class="form-field full-width">
+        <label for="nombre">Usuario</label>
+        <input id="nombre" type="text" formControlName="nombre" placeholder="Nombre de usuario" />
+        <small class="error-text" *ngIf="campoInvalido('nombre')">El usuario debe tener al menos 3 caracteres.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+        <small class="error-text" *ngIf="campoInvalido('email')">Ingresa un email valido.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="password">Contrasena</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          [placeholder]="usuarioEditandoId ? 'Dejar vacio para mantener la actual' : 'Minimo 6 caracteres'" />
+        <small class="error-text" *ngIf="campoInvalido('password')">La contrasena debe tener al menos 6 caracteres.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="rol">Rol</label>
+        <select id="rol" formControlName="rol">
+          <option value="EMPLEADO">Empleado</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('rol')">Selecciona un rol.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('estado')">Selecciona un estado.</small>
+      </div>
+
+      <div class="button-row full-width">
+        <button type="submit" [disabled]="formulario.invalid || cargando">
+          {{ cargando ? 'Guardando...' : (usuarioEditandoId ? 'Actualizar' : 'Registrar usuario') }}
+        </button>
+        <button type="button" class="secondary-button" (click)="limpiar()">Limpiar</button>
+      </div>
+    </form>
+
+    <p class="success-text" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Listado de usuarios</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let usuario of usuarios">
+            <td>{{ usuario.idUsuario }}</td>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol.nombre }}</td>
+            <td>{{ usuario.estado ? 'Activo' : 'Inactivo' }}</td>
+            <td class="action-row">
+              <button type="button" class="secondary-button" (click)="editar(usuario)">Editar</button>
+              <button type="button" class="danger-button" (click)="eliminar(usuario.idUsuario)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="usuarios.length === 0">
+            <td colspan="6" class="empty-state">No hay usuarios registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

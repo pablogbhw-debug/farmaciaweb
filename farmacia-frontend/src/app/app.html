@@ -1,0 +1,6 @@
+<div class="app-shell">
+  <div class="app-container">
+    <app-login *ngIf="!authenticated" (loginExitoso)="actualizarSesion()"></app-login>
+    <app-dashboard *ngIf="authenticated" (cerrar)="cerrarSesion()"></app-dashboard>
+  </div>
+</div>

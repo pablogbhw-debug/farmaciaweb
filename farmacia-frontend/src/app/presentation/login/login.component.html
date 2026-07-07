@@ -1,0 +1,32 @@
+<section class="login-shell">
+
+
+  <article class="card login-card">
+    <div class="header-block">
+      <p class="eyebrow">Sistema de Gestion de Farmacia</p>
+      <h2>Iniciar sesion</h2>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="iniciarSesion()" class="form-grid">
+      <div class="form-field full-width">
+        <label for="username">Usuario</label>
+        <input id="username" type="text" formControlName="username" placeholder="Ingresa tu usuario" />
+        <small class="error-text" *ngIf="campoInvalido('username')">El usuario es obligatorio.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="password">Contrasena</label>
+        <input id="password" type="password" formControlName="password" placeholder="Ingresa tu contrasena" />
+        <small class="error-text" *ngIf="campoInvalido('password')">La contrasena es obligatoria.</small>
+      </div>
+
+      <div class="button-row full-width login-actions">
+        <button type="submit" [disabled]="formulario.invalid || cargando">
+          {{ cargando ? 'Validando...' : 'Iniciar sesion' }}
+        </button>
+      </div>
+    </form>
+
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+</section>

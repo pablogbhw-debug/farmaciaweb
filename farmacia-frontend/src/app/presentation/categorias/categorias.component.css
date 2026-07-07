@@ -1,0 +1,13 @@
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 720px) {
+  .module-header {
+    flex-direction: column;
+  }
+}

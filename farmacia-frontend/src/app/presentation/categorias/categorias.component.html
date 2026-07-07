@@ -1,0 +1,56 @@
+<section class="module-grid">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Modulo</p>
+        <h3>Categorias</h3>
+      </div>
+      <p class="muted-text">Registra, actualiza y lista las categorias del sistema.</p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="form-grid">
+      <div class="form-field full-width">
+        <label for="categoriaNombre">Nombre</label>
+        <input id="categoriaNombre" type="text" formControlName="nombre" placeholder="Ejemplo: Analgesicos" />
+        <small class="error-text" *ngIf="campoInvalido('nombre')">El nombre es obligatorio y debe tener minimo 3 caracteres.</small>
+      </div>
+
+      <div class="button-row full-width">
+        <button type="submit" [disabled]="formulario.invalid">{{ categoriaEditandoId ? 'Actualizar' : 'Guardar' }}</button>
+        <button type="button" class="secondary-button" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="secondary-button" (click)="listar()">Listar</button>
+      </div>
+    </form>
+
+    <p class="success-text" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Listado de categorias</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let categoria of categorias">
+            <td>{{ categoria.idCategoria }}</td>
+            <td>{{ categoria.nombre }}</td>
+            <td class="action-row">
+              <button type="button" class="secondary-button" (click)="editar(categoria)">Editar</button>
+              <button type="button" class="danger-button" (click)="eliminar(categoria.idCategoria)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="categorias.length === 0">
+            <td colspan="3" class="empty-state">No hay categorias registradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

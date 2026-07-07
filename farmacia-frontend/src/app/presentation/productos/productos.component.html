@@ -1,0 +1,101 @@
+<section class="module-grid">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Modulo</p>
+        <h3>Productos</h3>
+      </div>
+      <p class="muted-text">Administra productos y su categoria asociada.</p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="form-grid">
+      <div class="form-field">
+        <label for="idCategoria">Categoria</label>
+        <select id="idCategoria" formControlName="idCategoria">
+          <option [ngValue]="null">Seleccione</option>
+          <option *ngFor="let categoria of categorias" [ngValue]="categoria.idCategoria">{{ categoria.nombre }}</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('idCategoria')">La categoria es obligatoria.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="productoNombre">Nombre</label>
+        <input id="productoNombre" type="text" formControlName="nombre" placeholder="Paracetamol 500mg" />
+        <small class="error-text" *ngIf="campoInvalido('nombre')">El nombre es obligatorio.</small>
+      </div>
+
+      <div class="form-field full-width">
+        <label for="descripcion">Descripcion</label>
+        <textarea id="descripcion" rows="3" formControlName="descripcion" placeholder="Caja por 100 tabletas"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="precio">Precio</label>
+        <input id="precio" type="number" step="0.01" formControlName="precio" placeholder="12.50" />
+        <small class="error-text" *ngIf="campoInvalido('precio')">El precio es obligatorio y debe ser mayor a 0.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="fechaVencimiento">Fecha de vencimiento</label>
+        <input id="fechaVencimiento" type="date" formControlName="fechaVencimiento" />
+        <small class="error-text" *ngIf="campoInvalido('fechaVencimiento')">La fecha de vencimiento es obligatoria.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('estado')">El estado es obligatorio.</small>
+      </div>
+
+      <div class="button-row full-width">
+        <button type="submit" [disabled]="formulario.invalid">{{ productoEditandoId ? 'Actualizar' : 'Guardar' }}</button>
+        <button type="button" class="secondary-button" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="secondary-button" (click)="listar()">Listar</button>
+      </div>
+    </form>
+
+    <p class="success-text" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Listado de productos</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Categoria</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Vencimiento</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let producto of productos">
+            <td>{{ producto.idProducto }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>S/ {{ producto.precio }}</td>
+            <td>{{ producto.fechaVencimiento }}</td>
+            <td>{{ producto.estado ? 'Activo' : 'Inactivo' }}</td>
+            <td class="action-row">
+              <button type="button" class="secondary-button" (click)="editar(producto)">Editar</button>
+              <button type="button" class="danger-button" (click)="eliminar(producto.idProducto)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="productos.length === 0">
+            <td colspan="8" class="empty-state">No hay productos registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

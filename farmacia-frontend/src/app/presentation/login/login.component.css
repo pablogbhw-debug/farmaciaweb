@@ -1,0 +1,59 @@
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 32px 20px;
+}
+
+.login-card {
+  margin: 0;
+  width: 100%;
+  max-width: 460px;
+  padding: 32px;
+}
+
+.header-block {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2d6a4f;
+  font-weight: 700;
+}
+
+.header-block h2 {
+  margin: 0 0 10px;
+  color: #183153;
+  font-size: 2rem;
+}
+
+.support-text {
+  margin: 0;
+  color: #5f6f81;
+}
+
+.login-actions {
+  margin-top: 6px;
+}
+
+.login-actions button {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .login-shell {
+    padding: 18px;
+  }
+
+  .login-card {
+    padding: 24px;
+  }
+}

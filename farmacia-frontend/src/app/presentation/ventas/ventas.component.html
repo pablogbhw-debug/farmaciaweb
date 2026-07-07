@@ -1,0 +1,104 @@
+<section class="module-grid">
+  <article class="card">
+    <div class="module-header">
+      <div>
+        <p class="section-label">Modulo</p>
+        <h3>Ventas</h3>
+      </div>
+      <p class="muted-text">Registra ventas simples por un producto y consulta historiales.</p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="registrarVenta()" class="form-grid">
+      <div class="form-field">
+        <label for="idUsuarioVenta">Usuario</label>
+        <select id="idUsuarioVenta" formControlName="idUsuario">
+          <option [ngValue]="null">Seleccione</option>
+          <option *ngFor="let usuario of usuarios" [ngValue]="usuario.idUsuario">{{ usuario.nombre }}</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('idUsuario')">El usuario es obligatorio.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="metodoPago">Metodo de pago</label>
+        <select id="metodoPago" formControlName="metodoPago">
+          <option value="">Seleccione</option>
+          <option value="EFECTIVO">EFECTIVO</option>
+          <option value="TARJETA">TARJETA</option>
+          <option value="YAPE">YAPE</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('metodoPago')">El metodo de pago es obligatorio.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="idProductoVenta">Producto</label>
+        <select id="idProductoVenta" formControlName="idProducto">
+          <option [ngValue]="null">Seleccione</option>
+          <option *ngFor="let producto of productos" [ngValue]="producto.idProducto">{{ producto.nombre }}</option>
+        </select>
+        <small class="error-text" *ngIf="campoInvalido('idProducto')">El producto es obligatorio.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="cantidadVenta">Cantidad</label>
+        <input id="cantidadVenta" type="number" formControlName="cantidad" placeholder="2" />
+        <small class="error-text" *ngIf="campoInvalido('cantidad')">La cantidad es obligatoria y debe ser mayor a 0.</small>
+      </div>
+
+      <div class="button-row full-width">
+        <button type="submit" [disabled]="formulario.invalid">Registrar venta</button>
+        <button type="button" class="secondary-button" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="secondary-button" (click)="listarVentas()">Listar ventas</button>
+      </div>
+    </form>
+
+    <div class="filter-row" [formGroup]="filtroForm">
+      <div class="form-field">
+        <label for="inicio">Inicio</label>
+        <input id="inicio" type="date" formControlName="inicio" />
+      </div>
+
+      <div class="form-field">
+        <label for="fin">Fin</label>
+        <input id="fin" type="date" formControlName="fin" />
+      </div>
+
+      <div class="button-row align-end">
+        <button type="button" class="secondary-button" (click)="buscarPorFechas()">Buscar por fechas</button>
+      </div>
+    </div>
+
+    <p class="success-text" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="error-text" *ngIf="mensajeError">{{ mensajeError }}</p>
+  </article>
+
+  <article class="card">
+    <h3>Listado de ventas</h3>
+    <div class="table-wrapper table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID venta</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Metodo</th>
+            <th>Total</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventas">
+            <td>{{ venta.idVenta }}</td>
+            <td>{{ venta.usuario?.nombre }}</td>
+            <td>{{ venta.fecha | date:'short' }}</td>
+            <td>{{ venta.metodoPago }}</td>
+            <td>S/ {{ venta.total }}</td>
+            <td>{{ venta.detalles.length }}</td>
+          </tr>
+          <tr *ngIf="ventas.length === 0">
+            <td colspan="6" class="empty-state">No hay ventas registradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

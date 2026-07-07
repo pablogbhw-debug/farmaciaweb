@@ -1,0 +1,155 @@
+<section class="dashboard-layout">
+  <aside class="dashboard-sidebar" [class.sidebar-open]="sidebarOpen">
+    <div class="sidebar-brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <path d="M20 12h24a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8V20a8 8 0 0 1 8-8Z" />
+          <path d="M32 20v24M20 32h24" />
+        </svg>
+      </div>
+      <div>
+        <h2>Castimed</h2>
+        <p>{{ rolPrincipal }}</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <button
+        *ngFor="let item of menuItemsVisibles"
+        type="button"
+        class="menu-item"
+        [class.active]="vistaActual === item.id"
+        (click)="cambiarVista(item.id)">
+        <span class="menu-icon" aria-hidden="true" [ngSwitch]="item.id">
+          <svg *ngSwitchCase="'dashboard'" viewBox="0 0 24 24"><path d="M4 4h7v7H4Zm9 0h7v5h-7Zm0 7h7v9h-7ZM4 13h7v7H4Z" /></svg>
+          <svg *ngSwitchCase="'usuarios-registro'" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8.5-6v6m3-3h-6" /></svg>
+          <svg *ngSwitchCase="'categorias'" viewBox="0 0 24 24"><path d="M4 7h9l2-2h5v5l-2 2v7H9l-5-5Zm5 0v5h5l2-2V7Zm7 1.5a1.5 1.5 0 1 0 0 .01Z" /></svg>
+          <svg *ngSwitchCase="'productos'" viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7Zm0 0 8 4-8 4-8-4m8 4v10" /></svg>
+          <svg *ngSwitchCase="'inventario'" viewBox="0 0 24 24"><path d="M4 5h16v14H4Zm4 4h8M8 12h8M8 15h5" /></svg>
+          <svg *ngSwitchCase="'ventas'" viewBox="0 0 24 24"><path d="M5 6h2l2.4 8.5h7.8L20 8H8m2 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" /></svg>
+          <svg *ngSwitchCase="'reportes'" viewBox="0 0 24 24"><path d="M5 19V9m7 10V5m7 14v-7M3 19h18" /></svg>
+        </span>
+        <span>{{ item.label }}</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="menu-item logout-item" (click)="cerrarSesion()">
+        <span class="menu-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M10 17 15 12 10 7M15 12H4m5-8h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9" /></svg>
+        </span>
+        <span>Cerrar sesion</span>
+      </button>
+    </div>
+  </aside>
+
+  <button type="button" class="sidebar-backdrop" [class.visible]="sidebarOpen" (click)="cerrarSidebar()"></button>
+
+  <main class="dashboard-main">
+    <header class="card dashboard-topbar">
+      <div class="topbar-intro">
+        <button type="button" class="mobile-menu-button" (click)="toggleSidebar()" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </button>
+        <div>
+          <p class="section-label">Panel principal</p>
+          <h1>{{ tituloVistaActual }}</h1>
+          <p class="muted-text">{{ descripcionVistaActual }}</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="update-note" *ngIf="vistaActual === 'dashboard'">
+          <span>Actualizado: {{ ultimaActualizacion | date:'shortTime' }}</span>
+        </div>
+        <button type="button" class="secondary-button" *ngIf="vistaActual === 'dashboard'" (click)="cargarResumen()">
+          {{ cargandoResumen ? 'Actualizando...' : 'Actualizar resumen' }}
+        </button>
+      </div>
+    </header>
+
+    <section class="dashboard-content" [ngSwitch]="vistaActual">
+      <section *ngSwitchCase="'dashboard'" class="module-grid dashboard-overview">
+
+
+        <div class="summary-grid">
+          <article class="card summary-card" *ngFor="let card of resumenCards" [attr.data-tone]="card.icono">
+            <div class="summary-icon" [ngSwitch]="card.icono" aria-hidden="true">
+              <svg *ngSwitchCase="'productos'" viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7Zm0 0 8 4-8 4-8-4m8 4v10" /></svg>
+              <svg *ngSwitchCase="'categorias'" viewBox="0 0 24 24"><path d="M4 7h9l2-2h5v5l-2 2v7H9l-5-5Zm5 0v5h5l2-2V7Zm7 1.5a1.5 1.5 0 1 0 0 .01Z" /></svg>
+              <svg *ngSwitchCase="'alertas'" viewBox="0 0 24 24"><path d="M12 4 3 19h18L12 4Zm0 5v4m0 4h.01" /></svg>
+              <svg *ngSwitchCase="'ventas'" viewBox="0 0 24 24"><path d="M5 6h2l2.4 8.5h7.8L20 8H8m2 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" /></svg>
+              <svg *ngSwitchCase="'ingresos'" viewBox="0 0 24 24"><path d="M12 3v18M7 8.5A3.5 3.5 0 0 1 10.5 5h3A3.5 3.5 0 0 1 17 8.5c0 1.93-1.57 3.5-3.5 3.5h-3A3.5 3.5 0 0 0 7 15.5 3.5 3.5 0 0 0 10.5 19h3a3.5 3.5 0 0 0 3.5-3.5" /></svg>
+              <svg *ngSwitchCase="'vencimientos'" viewBox="0 0 24 24"><path d="M7 4v3m10-3v3M4 10h16M6 6h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm8 6-2 2-1-1" /></svg>
+            </div>
+            <div class="summary-content">
+              <p class="summary-title">{{ card.titulo }}</p>
+              <strong class="summary-value">{{ card.valor }}</strong>
+              <p class="summary-description">{{ card.descripcion }}</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="chart-grid">
+          <article class="card chart-card">
+            <div class="module-header compact-header">
+              <div>
+                <p class="section-label">Grafico</p>
+                <h3>Ventas recientes</h3>
+              </div>
+              <p class="muted-text">Barras por fecha segun el historial registrado.</p>
+            </div>
+
+            <div class="vertical-chart" *ngIf="ventasRecientes.length >= 2; else emptyVentasChart">
+              <div class="chart-column" *ngFor="let item of ventasRecientes">
+                <span class="column-value">{{ item.displayValue }}</span>
+                <div class="column-track">
+                  <div class="column-fill" [style.height]="getBarHeight(item.value, ventasRecientes)"></div>
+                </div>
+                <strong>{{ item.label }}</strong>
+              </div>
+            </div>
+
+            <ng-template #emptyVentasChart>
+              <p class="empty-state chart-empty">No hay datos suficientes para generar el grafico.</p>
+            </ng-template>
+          </article>
+
+          <article class="card chart-card">
+            <div class="module-header compact-header">
+              <div>
+                <p class="section-label">Grafico</p>
+                <h3>Stock destacado</h3>
+              </div>
+              <p class="muted-text">Productos con mayor stock dentro del inventario actual.</p>
+            </div>
+
+            <div class="horizontal-chart" *ngIf="stockProductos.length > 0; else emptyStockChart">
+              <div class="horizontal-item" *ngFor="let item of stockProductos">
+                <div class="horizontal-meta">
+                  <strong>{{ item.label }}</strong>
+                  <span>{{ item.displayValue }}</span>
+                </div>
+                <div class="horizontal-track">
+                  <div class="horizontal-fill" [style.width]="getBarWidth(item.value, stockProductos)"></div>
+                </div>
+                <small>{{ item.helper }}</small>
+              </div>
+            </div>
+
+            <ng-template #emptyStockChart>
+              <p class="empty-state chart-empty">No hay datos suficientes para generar el grafico.</p>
+            </ng-template>
+          </article>
+        </div>
+      </section>
+
+      <app-categorias *ngSwitchCase="'categorias'"></app-categorias>
+      <app-usuarios-registro *ngSwitchCase="'usuarios-registro'"></app-usuarios-registro>
+      <app-productos *ngSwitchCase="'productos'"></app-productos>
+      <app-inventario *ngSwitchCase="'inventario'"></app-inventario>
+      <app-ventas *ngSwitchCase="'ventas'"></app-ventas>
+      <app-reportes *ngSwitchCase="'reportes'"></app-reportes>
+    </section>
+  </main>
+</section>

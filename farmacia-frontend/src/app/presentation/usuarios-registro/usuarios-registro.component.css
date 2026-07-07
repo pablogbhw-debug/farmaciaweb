@@ -1,0 +1,14 @@
+.usuarios-layout {
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.module-header {
+  margin-bottom: 22px;
+}
+
+@media (max-width: 1080px) {
+  .usuarios-layout {
+    grid-template-columns: 1fr;
+  }
+}

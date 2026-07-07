@@ -10,9 +10,7 @@ sudo mkdir -p $APP_DIR
 sudo chown -R $USER:$USER $APP_DIR
 
 cd $APP_DIR
-if [ ! -d "$BACKEND_DIR" ]; then
-  git clone <TU_REPO_URL> $APP_DIR
-fi
+git pull origin main
 
 cd $BACKEND_DIR
 ./mvnw -DskipTests package

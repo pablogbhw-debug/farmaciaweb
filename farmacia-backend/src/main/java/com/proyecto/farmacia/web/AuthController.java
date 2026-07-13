@@ -48,22 +48,6 @@ public class AuthController {
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        return createUser(request, false);
-    }
-
-    @PostMapping("/bootstrap-admin")
-    public ResponseEntity<?> bootstrapAdmin(@RequestBody RegisterRequest request) {
-        boolean hayAdmin = usuarioRepo.findAll().stream()
-                .anyMatch(usuario -> usuario.getRol() != null && "ADMIN".equalsIgnoreCase(usuario.getRol().getNombre()));
-
-        if (hayAdmin) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un usuario administrador");
-        }
-
-        return createUser(request, true);
-    }
-
-    private ResponseEntity<?> createUser(RegisterRequest request, boolean adminBootstrap) {
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             return ResponseEntity.badRequest().body("El nombre es obligatorio");
         }
@@ -80,11 +64,9 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Ya existe un usuario con ese email");
         }
 
-        String nombreRol = adminBootstrap
-                ? "ADMIN"
-                : (request.getRol() == null || request.getRol().isBlank()
-                        ? "EMPLEADO"
-                        : request.getRol().trim().toUpperCase());
+        String nombreRol = request.getRol() == null || request.getRol().isBlank()
+                ? "EMPLEADO"
+                : request.getRol().trim().toUpperCase();
 
         Rol rol = rolRepo.findByNombre(nombreRol);
         if (rol == null) {

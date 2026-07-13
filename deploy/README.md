@@ -32,19 +32,28 @@ cd /opt/farmaciaweb
 git clone <TU_REPO_URL> .
 ```
 
-## Ejecutar el script de despliegue
+## Actualizar una instalacion existente
+
+Despues de subir los cambios a la rama `main`, ejecuta en el servidor:
+
 ```bash
+cd /opt/farmaciaweb
 chmod +x deploy/deploy-ec2.sh
 ./deploy/deploy-ec2.sh
 ```
 
+El script obtiene los cambios con `git pull --ff-only`, compila ambos proyectos,
+reemplaza el JAR y los archivos del frontend, reinicia el backend y recarga
+Nginx. No vuelve a crear los servicios ni su configuracion.
+
 ## Variables importantes
 
-Editar el archivo del script y reemplazar:
-- <TU_REPO_URL>
-- tu_password
-- TU_PUBLIC_DNS
-- el usuario del servicio (ec2-user o ubuntu)
+Las credenciales y la configuraciÃ³n sensible se guardan en
+`farmacia-backend/.env`. Este archivo no se versiona. Usa
+`farmacia-backend/.env.example` como plantilla.
+
+Revisa tambiÃ©n el DNS pÃºblico y el usuario del servicio (`ec2-user` o
+`ubuntu`) en el script antes de ejecutarlo.
 
 ## Verificar servicios
 ```bash

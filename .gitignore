@@ -1,5 +1,7 @@
 # Backend Java / Spring Boot
-
+farmacia-backend/target/
+*.class
+*.log
 
 # Frontend Angular / Node
 farmacia-frontend/node_modules/
@@ -20,4 +22,9 @@ farmacia/
 
 # Variables sensibles
 .env
+.env.*
+**/.env
+**/.env.*
 *.env
+!.env.example
+!**/.env.example

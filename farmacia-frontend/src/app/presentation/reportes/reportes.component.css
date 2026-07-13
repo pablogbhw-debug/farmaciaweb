@@ -10,6 +10,31 @@
   margin-bottom: 20px;
 }
 
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.report-actions .muted-text {
+  margin: 0;
+}
+
+.pdf-button {
+  flex: 0 0 auto;
+  background: #b42318;
+  color: #ffffff;
+}
+
+.pdf-button:hover:not(:disabled) {
+  background: #8f1c14;
+}
+
+.pdf-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .report-summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -43,6 +68,12 @@
 
 @media (max-width: 720px) {
   .module-header {
+    flex-direction: column;
+  }
+
+  .report-actions {
+    width: 100%;
+    align-items: flex-start;
     flex-direction: column;
   }
 }

@@ -23,7 +23,17 @@
         <p class="section-label">Reporte</p>
         <h3>Reporte de ventas</h3>
       </div>
-      <p class="muted-text">Informacion de ventas presentada en formato de tabla.</p>
+      <div class="report-actions">
+        <p class="muted-text">Informacion de ventas presentada en formato de tabla.</p>
+        <button
+          type="button"
+          class="pdf-button"
+          [disabled]="ventas.length === 0"
+          (click)="descargarReporteVentasPdf()"
+        >
+          Descargar PDF
+        </button>
+      </div>
     </div>
 
     <div class="report-summary-grid">

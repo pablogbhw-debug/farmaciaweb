@@ -59,8 +59,13 @@ cd "$APP_DIR"
 # y se restaura solo el script para que no bloquee el pull. Cualquier otro
 # cambio local sigue protegido por Git y detendra la actualizacion.
 DEPLOY_SCRIPT=deploy/deploy-ec2.sh
-if ! git diff --quiet -- "$DEPLOY_SCRIPT" || \
-   ! git diff --cached --quiet -- "$DEPLOY_SCRIPT"; then
+if ! git ls-files --error-unmatch "$DEPLOY_SCRIPT" >/dev/null 2>&1; then
+  BACKUP_FILE="/tmp/deploy-ec2.sh.$(date +%Y%m%d%H%M%S).backup"
+  cp -- "$DEPLOY_SCRIPT" "$BACKUP_FILE"
+  rm -- "$DEPLOY_SCRIPT"
+  echo "Script local no rastreado respaldado en $BACKUP_FILE"
+elif ! git diff --quiet -- "$DEPLOY_SCRIPT" || \
+     ! git diff --cached --quiet -- "$DEPLOY_SCRIPT"; then
   BACKUP_FILE="/tmp/deploy-ec2.sh.$(date +%Y%m%d%H%M%S).backup"
   cp -- "$DEPLOY_SCRIPT" "$BACKUP_FILE"
   git restore --source=HEAD --staged --worktree -- "$DEPLOY_SCRIPT"

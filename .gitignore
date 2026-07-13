@@ -2,11 +2,16 @@
 farmacia-backend/target/
 *.class
 *.log
+*.log.*
+hs_err_pid*
+replay_pid*
 
 # Frontend Angular / Node
 farmacia-frontend/node_modules/
 farmacia-frontend/dist/
 farmacia-frontend/.angular/
+farmacia-frontend/coverage/
+npm-debug.log*
 
 # IDE
 .vscode/
@@ -16,6 +21,10 @@ farmacia-frontend/.angular/
 # Sistema
 .DS_Store
 Thumbs.db
+*.bak
+*.backup
+*.orig
+*~
 
 # Carpeta vieja duplicada
 farmacia/
@@ -28,3 +37,7 @@ farmacia/
 *.env
 !.env.example
 !**/.env.example
+
+# Archivos temporales de despliegue
+.deploy-*
+deploy/*.tmp

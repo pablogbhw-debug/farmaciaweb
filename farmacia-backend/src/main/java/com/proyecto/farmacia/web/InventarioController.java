@@ -48,7 +48,7 @@ public class InventarioController {
         return ResponseEntity.ok(inventario.get());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody StockRequest request) {
         Producto producto = productoRepo.findById(request.getIdProducto()).orElse(null);
@@ -65,7 +65,7 @@ public class InventarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(inventarioRepo.save(inventario));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody StockRequest request) {
         Optional<Inventario> inventarioOptional = inventarioRepo.findById(id);

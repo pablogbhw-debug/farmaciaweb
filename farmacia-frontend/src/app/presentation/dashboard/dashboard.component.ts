@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit {
       return this.menuItems;
     }
 
-    return this.menuItems.filter((item) => ['dashboard', 'productos', 'inventario', 'ventas'].includes(item.id));
+    return this.menuItems.filter((item) => ['dashboard', 'inventario', 'ventas'].includes(item.id));
   }
 
   get rolPrincipal(): string {
@@ -157,14 +157,17 @@ export class DashboardComponent implements OnInit {
       productos: this.productoApiService.listar().pipe(catchError((error) => this.handleDashboardError('productos', error, [] as Producto[]))),
       inventario: this.inventarioApiService.listar().pipe(catchError((error) => this.handleDashboardError('inventario', error, [] as Inventario[]))),
       alertas: this.inventarioApiService.alertas().pipe(catchError((error) => this.handleDashboardError('alertas', error, [] as Inventario[]))),
-      ventas: this.esAdmin()
-        ? this.ventaApiService.listar().pipe(catchError((error) => this.handleDashboardError('ventas', error, [] as Venta[])))
-        : of([] as Venta[]),
-      vencimientos: this.esAdmin()
-        ? this.reporteApiService.vencimientos().pipe(
-            catchError((error) => this.handleDashboardError('vencimientos', error, { fechaLimite: '', productos: [] } as ReporteVencimientos))
-          )
-        : of({ fechaLimite: '', productos: [] } as ReporteVencimientos)
+      ventas: this.ventaApiService.listar().pipe(
+        catchError((error) => this.handleDashboardError('ventas', error, [] as Venta[]))
+      ),
+      vencimientos: this.reporteApiService.vencimientos().pipe(
+        catchError((error) =>
+          this.handleDashboardError('vencimientos', error, {
+            fechaLimite: '',
+            productos: []
+          } as ReporteVencimientos)
+        )
+      )
     }).subscribe(({ categorias, productos, inventario, alertas, ventas, vencimientos }) => {
       const totalIngresos = ventas.reduce((acumulado, venta) => acumulado + Number(venta.total ?? 0), 0);
       const productosBajoStock = alertas.length || inventario.filter((item) => item.stock <= item.stockMinimo).length;

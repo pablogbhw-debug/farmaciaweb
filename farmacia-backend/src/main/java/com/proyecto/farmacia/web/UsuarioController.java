@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +62,21 @@ public class UsuarioController {
     @GetMapping
     public List<Usuario> listar() {
         return usuarioRepo.findAll();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
+    @GetMapping("/para-ventas")
+    public List<UsuarioVentaResponse> listarParaVentas(Authentication authentication) {
+        List<Usuario> usuarios = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))
+                        ? usuarioRepo.findAll()
+                        : List.of(usuarioRepo.findByNombre(authentication.getName()));
+
+        return usuarios.stream()
+                .filter(usuario -> usuario != null)
+                .filter(usuario -> Boolean.TRUE.equals(usuario.getEstado()))
+                .map(usuario -> new UsuarioVentaResponse(usuario.getIdUsuario(), usuario.getNombre()))
+                .toList();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -120,5 +136,8 @@ public class UsuarioController {
         }
         usuarioRepo.deleteById(id);
         return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
+
+    public record UsuarioVentaResponse(Long idUsuario, String nombre) {
     }
 }

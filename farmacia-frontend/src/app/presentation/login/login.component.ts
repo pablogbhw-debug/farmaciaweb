@@ -41,6 +41,7 @@ export class LoginComponent {
       next: (respuesta) => {
         localStorage.setItem('token', respuesta.token);
         localStorage.setItem('roles', JSON.stringify(respuesta.roles ?? []));
+        localStorage.setItem('username', respuesta.username);
         this.cargando = false;
         this.loginExitoso.emit();
       },

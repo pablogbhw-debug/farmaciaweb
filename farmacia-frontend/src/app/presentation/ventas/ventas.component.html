@@ -9,7 +9,7 @@
     </div>
 
     <form [formGroup]="formulario" (ngSubmit)="registrarVenta()" class="form-grid">
-      <div class="form-field">
+      <div class="form-field" *ngIf="esAdmin; else usuarioLogueado">
         <label for="idUsuarioVenta">Usuario</label>
         <select id="idUsuarioVenta" formControlName="idUsuario">
           <option [ngValue]="null">Seleccione</option>
@@ -17,6 +17,13 @@
         </select>
         <small class="error-text" *ngIf="campoInvalido('idUsuario')">El usuario es obligatorio.</small>
       </div>
+
+      <ng-template #usuarioLogueado>
+        <div class="form-field">
+          <label for="usuarioLogueadoVenta">Usuario</label>
+          <input id="usuarioLogueadoVenta" type="text" [value]="nombreUsuarioLogueado" readonly />
+        </div>
+      </ng-template>
 
       <div class="form-field">
         <label for="metodoPago">Metodo de pago</label>

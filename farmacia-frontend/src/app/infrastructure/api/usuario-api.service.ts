@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Usuario, UsuarioRequest } from '../../domain/models/usuario.model';
+import { Usuario, UsuarioRequest, UsuarioVenta } from '../../domain/models/usuario.model';
 import { API_URL } from './api.config';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class UsuarioApiService {
 
   listar(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${API_URL}/api/usuarios`, this.getHeaders());
+  }
+
+  listarParaVentas(): Observable<UsuarioVenta[]> {
+    return this.http.get<UsuarioVenta[]>(`${API_URL}/api/usuarios/para-ventas`, this.getHeaders());
   }
 
   actualizar(id: number, usuario: UsuarioRequest): Observable<Usuario> {

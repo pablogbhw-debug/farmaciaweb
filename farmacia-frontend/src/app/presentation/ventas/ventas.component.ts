@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Producto } from '../../domain/models/producto.model';
-import { Usuario } from '../../domain/models/usuario.model';
+import { UsuarioVenta } from '../../domain/models/usuario.model';
 import { Venta, VentaRequest } from '../../domain/models/venta.model';
 import { ProductoApiService } from '../../infrastructure/api/producto-api.service';
 import { UsuarioApiService } from '../../infrastructure/api/usuario-api.service';
@@ -18,11 +18,20 @@ import { VentaApiService } from '../../infrastructure/api/venta-api.service';
 })
 export class VentasComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  usuarios: Usuario[] = [];
+  usuarios: UsuarioVenta[] = [];
   productos: Producto[] = [];
   ventas: Venta[] = [];
   mensajeExito = '';
   mensajeError = '';
+
+  get esAdmin(): boolean {
+    const roles = JSON.parse(localStorage.getItem('roles') ?? '[]') as string[];
+    return roles.includes('ADMIN');
+  }
+
+  get nombreUsuarioLogueado(): string {
+    return localStorage.getItem('username') ?? this.usuarios[0]?.nombre ?? '';
+  }
 
   formulario = this.fb.group({
     idUsuario: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -116,7 +125,7 @@ export class VentasComponent implements OnInit {
 
   limpiar(): void {
     this.formulario.reset({
-      idUsuario: null,
+      idUsuario: this.esAdmin ? null : (this.usuarios[0]?.idUsuario ?? null),
       metodoPago: '',
       idProducto: null,
       cantidad: null
@@ -129,9 +138,12 @@ export class VentasComponent implements OnInit {
   }
 
   private cargarUsuarios(): void {
-    this.usuarioApiService.listar().subscribe({
+    this.usuarioApiService.listarParaVentas().subscribe({
       next: (data) => {
         this.usuarios = data;
+        if (!this.esAdmin && data.length > 0) {
+          this.formulario.patchValue({ idUsuario: data[0].idUsuario });
+        }
       },
       error: (error) => {
         console.error('Error al cargar usuarios para ventas', error);

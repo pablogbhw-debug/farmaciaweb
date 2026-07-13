@@ -99,6 +99,6 @@ public class AuthController {
                 .map(role -> role.replace("ROLE_", ""))
                 .toList();
 
-        return ResponseEntity.ok(new TokenResponse("Bearer", token, roles));
+        return ResponseEntity.ok(new TokenResponse("Bearer", token, roles, userDetails.getUsername()));
     }
 }

@@ -37,6 +37,7 @@ export class InventarioComponent implements OnInit {
   ngOnInit(): void {
     this.cargarProductos();
     this.listar();
+    this.verAlertas();
   }
 
   guardar(): void {
@@ -62,6 +63,7 @@ export class InventarioComponent implements OnInit {
         this.mensajeError = '';
         this.limpiar();
         this.listar();
+        this.verAlertas();
       },
       error: (error) => {
         console.error('Error al guardar inventario', error);

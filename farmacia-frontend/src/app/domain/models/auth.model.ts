@@ -14,4 +14,5 @@ export interface TokenResponse {
   tokenType: string;
   token: string;
   roles: string[];
+  username: string;
 }

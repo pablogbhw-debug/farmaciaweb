@@ -11,6 +11,11 @@ export interface Usuario {
   rol: Rol;
 }
 
+export interface UsuarioVenta {
+  idUsuario: number;
+  nombre: string;
+}
+
 export interface UsuarioRequest {
   nombre: string;
   email: string;

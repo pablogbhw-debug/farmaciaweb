@@ -21,6 +21,7 @@ export class App {
   cerrarSesion(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('roles');
+    localStorage.removeItem('username');
     this.authenticated = false;
   }
 

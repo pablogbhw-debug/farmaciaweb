@@ -52,7 +52,7 @@ public class ReporteController {
         return respuesta;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @GetMapping("/vencimientos")
     public Map<String, Object> reporteVencimientos() {
         LocalDate fechaLimite = LocalDate.now().plusDays(90);

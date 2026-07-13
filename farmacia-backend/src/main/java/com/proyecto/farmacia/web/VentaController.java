@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,12 +53,14 @@ public class VentaController {
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @Transactional
     @PostMapping
-    public ResponseEntity<?> registrar(@RequestBody VentaRequest request) {
+    public ResponseEntity<?> registrar(@RequestBody VentaRequest request, Authentication authentication) {
         if (request.getDetalle() == null || request.getDetalle().isEmpty()) {
             return ResponseEntity.badRequest().body("La venta debe tener al menos un detalle");
         }
 
-        Usuario usuario = usuarioRepo.findById(request.getIdUsuario()).orElse(null);
+        Usuario usuario = esAdmin(authentication)
+                ? request.getIdUsuario() == null ? null : usuarioRepo.findById(request.getIdUsuario()).orElse(null)
+                : usuarioRepo.findByNombre(authentication.getName());
         if (usuario == null) {
             return ResponseEntity.badRequest().body("Usuario no encontrado");
         }
@@ -106,25 +109,52 @@ public class VentaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ventaRepo.save(venta));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @GetMapping
-    public List<Venta> listar() {
-        return ventaRepo.findAll();
+    public List<Venta> listar(Authentication authentication) {
+        if (esAdmin(authentication)) {
+            return ventaRepo.findAll();
+        }
+        return ventaRepo.findByUsuario(usuarioAutenticado(authentication));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtener(@PathVariable Long id) {
+    public ResponseEntity<?> obtener(@PathVariable Long id, Authentication authentication) {
         Optional<Venta> venta = ventaRepo.findById(id);
         if (venta.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        if (!esAdmin(authentication)
+                && !venta.get().getUsuario().getNombre().equals(authentication.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(venta.get());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @GetMapping("/fecha")
-    public List<Venta> listarPorFecha(@RequestParam LocalDate inicio, @RequestParam LocalDate fin) {
-        return ventaRepo.findByFechaBetween(inicio.atStartOfDay(), LocalDateTime.of(fin, LocalTime.MAX));
+    public List<Venta> listarPorFecha(@RequestParam LocalDate inicio, @RequestParam LocalDate fin,
+            Authentication authentication) {
+        LocalDateTime fechaInicio = inicio.atStartOfDay();
+        LocalDateTime fechaFin = LocalDateTime.of(fin, LocalTime.MAX);
+        if (esAdmin(authentication)) {
+            return ventaRepo.findByFechaBetween(fechaInicio, fechaFin);
+        }
+        return ventaRepo.findByUsuarioAndFechaBetween(
+                usuarioAutenticado(authentication), fechaInicio, fechaFin);
+    }
+
+    private Usuario usuarioAutenticado(Authentication authentication) {
+        Usuario usuario = usuarioRepo.findByNombre(authentication.getName());
+        if (usuario == null) {
+            throw new IllegalStateException("Usuario autenticado no encontrado");
+        }
+        return usuario;
+    }
+
+    private boolean esAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 }

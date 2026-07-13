@@ -41,3 +41,6 @@ farmacia/
 # Archivos temporales de despliegue
 .deploy-*
 deploy/*.tmp
+
+# Script administrado manualmente en el servidor
+deploy/deploy-ec2.sh
